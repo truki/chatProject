@@ -70,15 +70,33 @@ func main() {
 					continue
 				}
 				command := strings.Split(data, "|")[0]
-				user := strings.Split(data, "|")[1]
-				msg := strings.Split(data,"|")[2]
 
-				for _, u := range chatUsers {
-					if u.connection.RemoteAddr().String() != conn.RemoteAddr().String() {
-						io.WriteString(u.connection, command+"|"+user+"|"+msg+"\n")
-						log.Printf("Message %s sent to %s from %s", command+"|"+user+"|"+msg, u.name, user)
+				if command == "message" {
+					user := strings.Split(data, "|")[1]
+					msg := strings.Split(data,"|")[2]
+					for _, u := range chatUsers {
+						if u.connection.RemoteAddr().String() != conn.RemoteAddr().String() {
+							io.WriteString(u.connection, command+"|"+user+"|"+msg+"\n")
+							log.Printf("Message %s sent to %s from %s", command+"|"+user+"|"+msg, u.name, user)
+						}
 					}
 				}
+
+				if command == "privmessage" {
+					user := strings.Split(data, "|")[1]
+					userTo := strings.Split(data,"|")[2]
+					msg := strings.Split(data,"|")[3]
+					msg = strings.Join(msg, " ")
+					msg = msg[1:]
+					msg = strings.Join(msg, " ")
+					for _, u := range chatUsers {
+						if u.name == userTo {
+							io.WriteString(u.connection, command+"|"+user+"|"+userTo+"|"+msg+"\n")
+							log.Printf("Private Message %s sent to %s from %s", command+"|"+user+"|"+userTo+"|"+msg, u.name, user)
+						}
+					}
+				}
+
 			}
 		}()
 	}

@@ -79,11 +79,26 @@ func main() {
 
 	// listening messages submitted
 	input.OnSubmit(func(e *tui.Entry) {
-		_, err := io.WriteString(conn, "message|"+my_name+"|"+e.Text()+"\n")
-		if err != nil {
-			log.Println("Error sending username to chat server")
-			os.Exit(1)
+		firstWord := strings.Split(e.Text()," ")[0]
+		if string(firstWord[0]) == string("@") {
+			username := strings.TrimPrefix(firstWord,"@")
+			_, found := usersConnected[firstWord[1:]]
+			if found {
+				_, err = io.WriteString(conn, "privmessage|"+my_name+"|"+username+"|"+e.Text()+"\n")
+				if err != nil {
+					log.Println("Error sending private message to chat server")
+					os.Exit(1)
+				}
+			}
+		} else {
+			_, err = io.WriteString(conn, "message|"+my_name+"|"+e.Text()+"\n")
+			if err != nil {
+				log.Println("Error sending public message to chat server")
+				os.Exit(1)
+			}
 		}
+
+
 		history.Append(tui.NewHBox(
 			tui.NewLabel(time.Now().Format("15:04")),
 			tui.NewPadder(1, 0, tui.NewLabel(fmt.Sprintf("<%s>", my_name))),
@@ -122,6 +137,18 @@ func main() {
 					history.Append(tui.NewHBox(
 						tui.NewLabel(time.Now().Format("15:04")),
 						tui.NewPadder(1, 0, tui.NewLabel(fmt.Sprintf("<%s>", user))),
+						tui.NewLabel(msg),
+						tui.NewSpacer(),
+					))
+				}
+				if command == "privmessage" {
+					user := strings.Split(data, "|")[1]
+					msg := strings.Split(data, "|")[3]
+					msg = strings.TrimSuffix(msg,"\n")
+
+					history.Append(tui.NewHBox(
+						tui.NewLabel(time.Now().Format("15:04")),
+						tui.NewPadder(1, 0, tui.NewLabel(fmt.Sprintf("<%s>-priv", user))),
 						tui.NewLabel(msg),
 						tui.NewSpacer(),
 					))
