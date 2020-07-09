@@ -14,7 +14,7 @@ Go to  server folder and execute
 $ go run server.go
 ```
 
-After that ypu will see in the cosole something like this, if everything works fine ;-) 
+After that you will see in the cosole something like this, if everything works fine ;-) 
 
 ```bash
 2020/07/08 15:33:01 Chat server started and listening on :8887
@@ -36,5 +36,5 @@ Of course you can launch severals clients.
 * TCP chat client using a GUI console module (tui-go).
 * Chat with more than one user.
 * Notify new users.
-* Send private message.
+* Send private message. To do this, use the below sintax: `@<username> message`. This message only will appear into <username> chat client.
 

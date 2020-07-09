@@ -85,14 +85,14 @@ func main() {
 				if command == "privmessage" {
 					user := strings.Split(data, "|")[1]
 					userTo := strings.Split(data,"|")[2]
-					msg := strings.Split(data,"|")[3]
-					msg = strings.Join(msg, " ")
-					msg = msg[1:]
-					msg = strings.Join(msg, " ")
+					privmsg := strings.Split(data,"|")[3]
+					privmsgArray := strings.Split(privmsg," ")[1:]
+					privmsg = strings.Join(privmsgArray, " ")
+
 					for _, u := range chatUsers {
 						if u.name == userTo {
-							io.WriteString(u.connection, command+"|"+user+"|"+userTo+"|"+msg+"\n")
-							log.Printf("Private Message %s sent to %s from %s", command+"|"+user+"|"+userTo+"|"+msg, u.name, user)
+							io.WriteString(u.connection, command+"|"+user+"|"+userTo+"|"+privmsg+"\n")
+							log.Printf("Private Message %s sent to %s from %s", command+"|"+user+"|"+userTo+"|"+privmsg, u.name, user)
 						}
 					}
 				}

@@ -148,7 +148,7 @@ func main() {
 
 					history.Append(tui.NewHBox(
 						tui.NewLabel(time.Now().Format("15:04")),
-						tui.NewPadder(1, 0, tui.NewLabel(fmt.Sprintf("<%s>-priv", user))),
+						tui.NewPadder(1, 0, tui.NewLabel(fmt.Sprintf("<%s-priv>", user))),
 						tui.NewLabel(msg),
 						tui.NewSpacer(),
 					))
